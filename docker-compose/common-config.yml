@@ -1,0 +1,15 @@
+services:
+  network-config-service:
+    networks:
+      - bank-network
+    deploy:
+      resources:
+        limits:
+          memory: "500M"
+  microservice-config:
+    extends:
+      file: common-config.yml
+      service: network-config-service
+    depends_on:
+      configserver:
+        condition: service_completed_successfully
