@@ -31,7 +31,7 @@ services:
       start_period: 120s
     extends:
       file: common-config.yml
-      service: network-config-service
+      service: microservice-base-config
 
   accounts:
     image: docker.io/prashant498/accounts:latest
@@ -41,6 +41,7 @@ services:
     extends:
       file: common-config.yml
       service: microservice-config
+
   cards:
     image: docker.io/prashant498/cards:latest
     container_name: cards_cn
@@ -58,6 +59,12 @@ services:
     extends:
       file: common-config.yml
       service: microservice-config
+
+  discoveryservice:
+    extends:
+      file: common-config.yml
+      service: descovery-service
+
 networks:
   bank-network:
     driver: bridge

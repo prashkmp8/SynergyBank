@@ -1,0 +1,36 @@
+services:
+  network-config-service:
+    networks:
+      - bank-network
+    deploy:
+      resources:
+        limits:
+          memory: "500M"
+
+
+  microservice-base-config:
+    extends:
+      file: common-config.yml
+      service: network-config-service
+    environment:
+      - SPRING_RABBITMQ_HOST: rabbit_cn
+
+  microservice-config:
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+    depends_on:
+      configserver:
+        condition: service_completed_successfully
+    environment:
+      - SPRING_PROFILES_ACTIVE: default
+      - SPRING_CLOUD_CONFIG_URI: http://configserver_cn:5000
+
+  discovery-service:
+    image: docker.io/prashant498/bankdiscoveryservice:latest
+    container_name: discoveryservice_cn
+    ports:
+      - "7000:7000"
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
