@@ -1,0 +1,53 @@
+server:
+  port: 5400
+spring:
+  application:
+    name: API_GATEWAY
+  config:
+    import: "optional:configserver:http://localhost:6000/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+        routes:
+          - id: "accounts"
+            uri: lb://accounts
+            predicates:
+              - Path=/accounts/**
+          - id: "cards"
+            uri: lb://cards
+            predicates:
+              - Path=/cards/**
+          - id: "loans"
+            uri: lb://loans
+            predicates:
+              - Path=/loans/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: "http://localhost:7000/eureka/"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "Gateway Server"
+    description: "Edge Server for Synergy Bank"
+    version: "1.0.0"

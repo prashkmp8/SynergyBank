@@ -1,0 +1,30 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: DISCOVERY_SERVICE
+  config:
+    import: "optional:configserver:http://localhost:6000/"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+
+eureka:
+  instance:
+    hostname: "localhost"
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: "http://${eureka.instance.hostname}:${server.port}/eureka"
